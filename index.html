@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Logo Slider</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sv-logo-slider">
+    <button id="slide-left" class="left-arrow"></button>
+    <div class="slider">
+      <ul class="slides-container" style="left: 0px;">
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-3dcart.png);">3dcart</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-amazon.png);">Amazon</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-anvizent.png);">Anvizent</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-bigcommerce.png);">BigCommerce</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-channeladvisor.png);">ChannelAdvisor</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-xero.png);">Xero</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-3dcart.png);">3dcart</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-amazon.png);">Amazon</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-anvizent.png);">Anvizent</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-bigcommerce.png);">BigCommerce</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-clover.png);">Clover</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-geekseller.png);">GeekSeller</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-lightspeed.png);">Lightspeed</a></li>
+        <li><a href="#" style="background-image: url(img/tightcrop-logo-xero.png);">Xero</a></li>
+      </ul>
+    </div>
+    <button id="slide-right" class="right-arrow"></button>
+  </div>
+  <script>
+    let sv_slidesContainer = document.querySelector('.sv-logo-slider .slides-container');
+    let sv_sliderImgs = document.querySelectorAll('.sv-logo-slider li');
+
+    document.getElementById('slide-left').addEventListener('click', function(){
+      // console.log('slide left');
+      let d = getSliderCalcs()
+      
+      if (d.slidePosLeft < 0 && Math.abs(d.slidePosLeft) < d.sliderWindowWidth) {       // slide is less than one full move away from it's starting position. Instead of moving one full move, just reset it back to zero
+        // console.log('was almost full left')
+        sv_slidesContainer.style.left = '0px';
+      } else if (d.slidePosLeft === 0 ) {
+        // console.log('was at 0', -(d.widthOfAllSlides - d.sliderWindowWidth));
+        sv_slidesContainer.style.left = (-(d.widthOfAllSlides - d.sliderWindowWidth)) + 'px';
+      } else {
+        sv_slidesContainer.style.left = (d.slidePosLeft + d.sliderWindowWidth) + 'px';
+      }
+    });
+
+    document.getElementById('slide-right').addEventListener('click', function(){
+      let d = getSliderCalcs()
+
+      if (Math.floor(d.slidePosLeft) <= Math.floor(d.sliderWindowWidth - d.widthOfAllSlides)) { // slidesContainer is at the end. Move it back to the beginning.
+        // alert('It\'s at the end. Move it back to the beginning.');
+        sv_slidesContainer.style.left = '0px';
+      } else if (d.slidePosLeft - d.sliderWindowWidth < d.sliderWindowWidth - d.widthOfAllSlides ) { // slidesContainer is almost at the end. Move it all the way to the end.
+        // alert('Moving it one more full move would put it past the end. Just move it directly to the end');
+        sv_slidesContainer.style.left = (d.sliderWindowWidth - d.widthOfAllSlides) + 'px';
+      } else {
+        sv_slidesContainer.style.left = (d.slidePosLeft - d.sliderWindowWidth) + 'px';
+      }
+    });
+
+    function getSliderCalcs() {
+      let sliderCalcs = {
+        slideWidth: document.querySelector('.sv-logo-slider li').getBoundingClientRect().width,
+        slidePosLeft: parseFloat(sv_slidesContainer.style.left.replace(/px/, '')),
+        sliderWindowWidth: document.querySelector('.sv-logo-slider .slider').getBoundingClientRect().width,
+        sliderImgCount: sv_sliderImgs.length
+
+      };
+      sliderCalcs.widthOfAllSlides = sv_sliderImgs.length * sliderCalcs.slideWidth;
+      return sliderCalcs;
+    }
+    window.addEventListener('resize', function(){
+      if (sv_slidesContainer.style.left != '0px') {
+        sv_slidesContainer.style.left = '0px';
+      }
+    });
+
+    console.log(getSliderCalcs());
+
+  </script>
+</body>
+</html>
